@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  back-fpm:
+    build: ./
+    container_name: back-fpm
+    volumes:
+      - ./:/var/www/app
+    networks:
+      - app_network
+    ports:
+      - "${FPM_PORT}"
+  web-backend:
+    image: nginx:latest
+    container_name: web-backend
+    depends_on:
+      - back-fpm
+    ports:
+      - '${WEB_PORT}:80'
+    volumes:
+      - ./:/var/www/app
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - app_network
+  database:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: "${DATABASE_NAME}"
+      POSTGRES_USER: "${DATABASE_USER}"
+      POSTGRES_PASSWORD: "${DATABASE_PASSWORD}"
+    volumes:
+      - appDB:/docker-entrypoint-initdb.d
+    ports:
+      - "${DATABASE_PORT}:5432"
+    networks:
+      - app_network
+
+volumes:
+  appDB:
+
+networks:
+  app_network:

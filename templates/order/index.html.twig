@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Orders{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+</style>
+
+<div class="example-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Номер по порядку</th>
+                <th>название заказа</th>
+                <th>ФИ менеджера</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    {# не совсем ясно что означает "Номер по порядку" #}
+                    <td>
+                        {# id заказа {{ order.id }} #}
+                        {# индекс из текущей выборки пагинатора {{ loop.index }} #}
+
+                        {# номер от всех заказов #}
+                        {{ offset + loop.index }} 
+                    </td>
+                    <td>{{ order.name }}</td>
+                    <td>{{ order.manager.firstName }} {{ order.manager.lastName }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if page > 1 %}
+        <a href="{{ path('app_orders', {page: page - 1 }) }}">Prev</a>
+    {% endif %}
+    page: {{ page }}
+    {% if next > 0 %}
+        <a href="{{ path('app_orders', {page: next }) }}">Next</a>
+    {% endif %}
+</div>
+{% endblock %}

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ManagerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ManagerRepository::class)]
@@ -24,6 +25,9 @@ class Manager
 
     #[ORM\OneToMany(mappedBy: 'manager', targetEntity: Order::class)]
     private Collection $orders;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $birthdate = null;
 
     public function __construct()
     {
@@ -85,6 +89,18 @@ class Manager
                 $order->setManager(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBirthdate(): ?\DateTimeInterface
+    {
+        return $this->birthdate;
+    }
+
+    public function setBirthdate(\DateTimeInterface $birthdate): static
+    {
+        $this->birthdate = $birthdate;
 
         return $this;
     }

@@ -13,4 +13,6 @@ migrate:
 	docker exec -i --user=1000:1000 back-fpm php bin/console doctrine:migrations:migrate
 fixture:
 	docker exec -i --user=1000:1000 back-fpm php bin/console doctrine:fixtures:load
-install: migrate fixture
+composer-install:
+	docker exec -i --user=1000:1000 back-fpm composer install
+install: migrate fixture composer-install
